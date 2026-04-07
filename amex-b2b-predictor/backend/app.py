@@ -154,13 +154,12 @@ def get_sectors():
     return jsonify(sectors)
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
-    # ... baaki saara purana code ...
+# ... baaki saara upar wala code rehne dein ...
 
 @app.route('/')
 def home():
     return {"status": "online", "message": "Amex B2B Predictor API is running"}
 
 if __name__ == "__main__":
-    app.run()
+    # Local testing ke liye port 5000
+    app.run(debug=True, host="0.0.0.0", port=5000)
