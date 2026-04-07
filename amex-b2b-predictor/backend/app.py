@@ -156,3 +156,11 @@ def get_sectors():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+    # ... baaki saara purana code ...
+
+@app.route('/')
+def home():
+    return {"status": "online", "message": "Amex B2B Predictor API is running"}
+
+if __name__ == "__main__":
+    app.run()
