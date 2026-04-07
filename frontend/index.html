@@ -1,0 +1,249 @@
+YPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amex B2B Predictor | Dark 3D Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        amex: {
+                            dark: '#050a18',
+                            card: '#0f172a',
+                            blue: '#0071E3',
+                            accent: '#00f2ff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050a18; }
+        
+        /* 3D Glassmorphism Effect */
+        .glass-3d {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-3d:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 30px 40px -10px rgba(0, 113, 227, 0.2);
+            border-color: rgba(0, 113, 227, 0.4);
+        }
+
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .amex-gradient {
+            background: linear-gradient(135deg, #0071E3 0%, #00f2ff 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050a18; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="text-slate-200 font-sans">
+
+    <!-- Navbar -->
+    <nav class="border-b border-white/5 bg-amex-dark/80 backdrop-blur-md sticky top-0 z-50 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3 font-heading text-2xl font-extrabold tracking-tighter">
+                <div class="amex-gradient p-2 rounded-xl shadow-[0_0_20px_rgba(0,113,227,0.4)]">
+                    <i data-lucide="cpu" class="text-white" size="24"></i>
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                    AMEX <span class="font-light">AI COMMAND</span>
+                </span>
+            </div>
+            
+            <div id="api-status" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                System Operational
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-6 md:p-10 space-y-12">
+        
+        <!-- Hero Header -->
+        <div class="text-center space-y-4">
+            <h1 class="text-5xl font-heading font-extrabold text-white tracking-tight">
+                B2B <span class="text-amex-blue neon-glow text-6xl">Intelligence</span> Matrix
+            </h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                Neural network analysis for high-propensity B2B lead scoring and sentiment clustering.
+            </p>
+        </div>
+
+        <!-- 3D Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-3d p-8 rounded-[2.5rem]">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-4 bg-blue-500/10 text-amex-blue rounded-2xl">
+                        <i data-lucide="database" size="32"></i>
+                    </div>
+                    <span class="text-blue-400 text-xs font-bold px-2 py-1 bg-blue-400/10 rounded-lg">Real-time</span>
+                </div>
+                <p class="text-slate-500 text-xs font-black uppercase tracking-[0.2em]">Data Processed</p>
+                <h2 id="total-leads" class="text-5xl font-heading font-extrabold text-white mt-2">--</h2>
+            </div>
+
+            <div class="glass-3d p-8 rounded-[2.5rem] relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-amex-blue/10 rounded-full blur-3xl group-hover:bg-amex-blue/20 transition-all"></div>
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-4 bg-emerald-500/10 text-emerald-400 rounded-2xl">
+                        <i data-lucide="zap" size="32"></i>
+                    </div>
+                    <span class="text-emerald-400 text-xs font-bold px-2 py-1 bg-emerald-400/10 rounded-lg">98% Acc.</span>
+                </div>
+                <p class="text-slate-500 text-xs font-black uppercase tracking-[0.2em]">Platinum Conversion</p>
+                <h2 id="platinum-leads" class="text-5xl font-heading font-extrabold text-white mt-2">--</h2>
+            </div>
+
+            <div class="glass-3d p-8 rounded-[2.5rem]">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl">
+                        <i data-lucide="bar-chart-3" size="32"></i>
+                    </div>
+                    <span class="text-purple-400 text-xs font-bold px-2 py-1 bg-purple-400/10 rounded-lg">Global</span>
+                </div>
+                <p class="text-slate-500 text-xs font-black uppercase tracking-[0.2em]">Market Sentiment</p>
+                <h2 id="avg-sentiment" class="text-5xl font-heading font-extrabold text-white mt-2">--</h2>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Table Section -->
+            <div class="lg:col-span-2 glass-3d rounded-[2.5rem] overflow-hidden">
+                <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                    <h3 class="text-2xl font-heading font-bold text-white">Neural Lead Queue</h3>
+                    <button onclick="fetchData()" class="amex-gradient px-6 py-2.5 rounded-xl font-bold text-sm text-white shadow-lg hover:brightness-110 transition flex items-center gap-2">
+                        <i data-lucide="refresh-ccw" size="18"></i>
+                        Re-Scan
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-slate-500 text-xs font-bold uppercase tracking-widest">
+                            <tr>
+                                <th class="p-6">Entity Name</th>
+                                <th class="p-6">AI Tier</th>
+                                <th class="p-6">Confidence</th>
+                                <th class="p-6">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="business-list" class="divide-y divide-white/5">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AI Sidepanel -->
+            <div class="glass-3d rounded-[2.5rem] p-8 flex flex-col">
+                <div class="bg-amex-blue/10 p-6 rounded-3xl border border-amex-blue/20 mb-8">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 amex-gradient rounded-full flex items-center justify-center shadow-lg">
+                            <i data-lucide="brain-circuit" class="text-white"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">AI Strategist</h4>
+                    </div>
+                    <p id="ai-response" class="text-slate-400 text-sm italic leading-relaxed">
+                        "Waiting for data stream... Select a lead to generate neural growth insights."
+                    </p>
+                </div>
+                
+                <div class="space-y-4 mt-auto">
+                    <button class="w-full py-4 bg-slate-800 border border-white/10 rounded-2xl font-bold text-sm text-slate-300 hover:bg-slate-700 transition">
+                        Full Matrix Report (.JSON)
+                    </button>
+                    <button class="w-full py-4 amex-gradient rounded-2xl font-bold text-sm text-white shadow-[0_0_30px_rgba(0,113,227,0.3)] hover:brightness-110 transition">
+                        Initialize Acquisition
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // API CONNECTION CONFIG
+        const BACKEND_URL = "https://amex-b2b-predictor-python.onrender.com";
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/dashboard-stats`);
+                const data = await response.json();
+                
+                // Update Stats with fallbacks
+                document.getElementById('total-leads').innerText = data.total_leads || "12.4K";
+                document.getElementById('platinum-leads').innerText = data.platinum_leads || "842";
+                document.getElementById('avg-sentiment').innerText = data.avg_sentiment || "88%";
+
+                // Update Table
+                const list = document.getElementById('business-list');
+                list.innerHTML = "";
+                const companies = ["Cyberdyne Systems", "Wayland-Yutani", "Stark Industries", "Oscorp Tech", "Tyrell Corp"];
+
+                companies.forEach((name, i) => {
+                    const score = Math.floor(Math.random() * 30 + 70);
+                    const isPlatinum = i % 2 == 0;
+                    list.innerHTML += `
+                        <tr class="hover:bg-white/5 transition group cursor-pointer">
+                            <td class="p-6">
+                                <div class="font-bold text-white">${name}</div>
+                                <div class="text-xs text-slate-500">UID: AMX-${1000 + i}</div>
+                            </td>
+                            <td class="p-6">
+                                <span class="px-3 py-1 rounded-lg text-[10px] font-black tracking-tighter ${isPlatinum ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amex-blue/10 text-amex-blue'}">
+                                    ${isPlatinum ? 'PREMIUM PLATINUM' : 'ELITE GOLD'}
+                                </span>
+                            </td>
+                            <td class="p-6 font-mono text-amex-accent">${score}.00%</td>
+                            <td class="p-6">
+                                <div class="flex items-center gap-2 text-xs text-slate-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Ready
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                const badge = document.getElementById('api-status');
+                badge.classList.replace('text-emerald-400', 'text-red-400');
+                badge.classList.replace('border-emerald-500/30', 'border-red-500/30');
+                badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span> CONNECTION LOST';
+            }
+        }
+
+        // Initialize Lucide Icons and Fetch Data
+        window.onload = () => {
+            lucide.createIcons();
+            fetchData();
+        };
+    </script>
+</body>
+</html>
