@@ -1,254 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amex B2B Predictor | AI Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        amex: {
-                            dark: '#050a18',
-                            card: '#0f172a',
-                            blue: '#0071E3',
-                            accent: '#00f2ff'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #050a18; overflow-x: hidden; }
-        .glass-3d {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .glass-3d:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(0, 113, 227, 0.5);
-            box-shadow: 0 35px 60px -15px rgba(0, 113, 227, 0.3);
-        }
-        .amex-gradient {
-            background: linear-gradient(135deg, #0071E3 0%, #00f2ff 100%);
-        }
-        .loading-shimmer {
-            background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .pulse-glow { animation: pulse-glow 2s infinite; }
-        @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    </style>
-</head>
-<body class="text-slate-200 font-sans">
-
-    <nav class="border-b border-white/5 bg-amex-dark/80 backdrop-blur-md sticky top-0 z-50 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3 font-heading text-2xl font-extrabold tracking-tighter cursor-pointer">
-                <div class="amex-gradient p-2 rounded-xl">
-                    <i data-lucide="shield-check" class="text-white" size="24"></i>
-                </div>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                    AMEX <span class="font-light">PREDICTOR</span>
-                </span>
-            </div>
-            
-            <div id="api-status" class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-widest">
-                <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-                API Connected
-            </div>
-        </div>
-    </nav>
-
-    <main class="container mx-auto p-6 md:p-10 space-y-12">
+<div class="p-8 border-b border-white/5 flex flex-wrap justify-between items-center bg-white/5 gap-4">
+    <div>
+        <h3 class="text-2xl font-heading font-bold text-white">Target Acquisition Queue</h3>
+        <p class="text-slate-500 text-sm mt-1">Real-time B2B analysis based on NLP sentiment</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <input type="file" id="csv-upload" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass-3d p-8 rounded-[2rem]">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-blue-500/10 text-amex-blue rounded-xl"><i data-lucide="bar-chart-big"></i></div>
-                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Analytics</span>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Total Businesses</p>
-                <h2 id="total-leads" class="text-5xl font-heading font-extrabold text-white mt-1">--</h2>
+        <button onclick="document.getElementById('csv-upload').click()" class="bg-white/5 border border-white/10 px-5 py-2.5 rounded-xl font-bold text-xs text-slate-300 hover:bg-white/10 hover:text-white transition-all flex items-center gap-2">
+            <i data-lucide="upload-cloud" size="18"></i>
+            Upload B2B CSV
+        </button>
+
+        <button onclick="fetchData()" class="amex-gradient px-6 py-2.5 rounded-xl font-bold text-sm text-white hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center gap-2">
+            <i data-lucide="refresh-cw" size="18"></i>
+            Sync Data
+        </button>
+    </div>
+</div>
+
+<script>
+    const BACKEND_URL = "https://amex-b2b-predictor-1.onrender.com";
+
+    // --- Naya Feature: CSV Upload Handling ---
+    async function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // UI ko loading state mein daalna
+        const box = document.getElementById('insight-box');
+        box.innerHTML = `
+            <div class="text-center space-y-3">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-amex-accent"></div>
+                <p class="text-amex-accent text-xs font-black uppercase tracking-widest">Processing Batch CSV...</p>
             </div>
+        `;
 
-            <div class="glass-3d p-8 rounded-[2rem] border-l-4 border-l-amex-blue">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl"><i data-lucide="award"></i></div>
-                    <span class="text-emerald-400 text-[10px] font-bold px-2 py-1 bg-emerald-400/10 rounded">High Propensity</span>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Platinum Potential</p>
-                <h2 id="platinum-leads" class="text-5xl font-heading font-extrabold text-white mt-1">--</h2>
-            </div>
+        const formData = new FormData();
+        formData.append('file', file);
 
-            <div class="glass-3d p-8 rounded-[2rem]">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl"><i data-lucide="trending-up"></i></div>
-                </div>
-                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Market Score</p>
-                <h2 id="avg-sentiment" class="text-5xl font-heading font-extrabold text-white mt-1">--</h2>
-            </div>
-        </div>
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/batch-analyze`, {
+                method: 'POST',
+                body: formData
+            });
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 glass-3d rounded-[2.5rem] overflow-hidden">
-                <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
-                    <div>
-                        <h3 class="text-2xl font-heading font-bold text-white">Target Acquisition Queue</h3>
-                        <p class="text-slate-500 text-sm mt-1">Real-time B2B analysis based on NLP sentiment</p>
-                    </div>
-                    <button onclick="fetchData()" class="amex-gradient px-6 py-2.5 rounded-xl font-bold text-sm text-white hover:scale-105 active:scale-95 transition-all shadow-lg">
-                        Sync Data
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 text-slate-500 text-xs font-bold uppercase tracking-widest">
-                            <tr>
-                                <th class="p-6">Entity</th>
-                                <th class="p-6">AI Classification</th>
-                                <th class="p-6">Growth Score</th>
-                                <th class="p-6">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="business-list" class="divide-y divide-white/5">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="glass-3d rounded-[2.5rem] p-8 border-t-4 border-t-amex-accent">
-                <div class="text-center mb-8">
-                    <div class="w-20 h-20 amex-gradient rounded-3xl mx-auto flex items-center justify-center shadow-2xl mb-4 transform -rotate-3">
-                        <i data-lucide="brain-circuit" class="text-white" size="40"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-white">AI Strategy Engine</h4>
-                    <p class="text-slate-500 text-sm">Claude-Powered Recommendations</p>
-                </div>
-
-                <div id="insight-box" class="bg-slate-900/50 rounded-2xl p-6 border border-white/5 min-h-[200px] flex items-center justify-center">
-                    <p class="text-slate-400 text-center italic text-sm">
-                        "Select a company from the queue to generate real-time acquisition strategy and risk assessment."
-                    </p>
-                </div>
-                
-                <button class="w-full mt-8 py-4 amex-gradient rounded-2xl font-bold text-white shadow-xl hover:brightness-110 transition-all uppercase tracking-widest text-xs">
-                    Generate Full Audit Report
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // UPDATED BACKEND URL
-        const BACKEND_URL = "https://amex-b2b-predictor-1.onrender.com";
-
-        async function fetchData() {
-            const list = document.getElementById('business-list');
-            const badge = document.getElementById('api-status');
+            if (!response.ok) throw new Error('Upload failed');
             
-            // Loading State
-            list.innerHTML = `<tr><td colspan="4" class="p-20 text-center"><div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-amex-blue"></div></td></tr>`;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/dashboard-stats`);
-                if (!response.ok) throw new Error('Network offline');
-                const data = await response.json();
-                
-                // Update Badge
-                badge.innerHTML = '<span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> System Operational';
-                badge.classList.replace('text-red-400', 'text-emerald-400');
-
-                // Update Counters
-                document.getElementById('total-leads').innerText = data.total_leads || "248";
-                document.getElementById('platinum-leads').innerText = data.platinum_leads || "42";
-                document.getElementById('avg-sentiment').innerText = data.avg_sentiment || "82%";
-
-                // Render Table
-                const companies = [
-                    { name: "TechNova Solutions", sector: "SaaS", score: 94 },
-                    { name: "Global Logistics Co", sector: "Shipping", score: 88 },
-                    { name: "Green Energy Inc", sector: "Utility", score: 76 },
-                    { name: "Urban Retail Corp", sector: "B2C", score: 65 },
-                    { name: "Delta Manufacturing", sector: "Industrial", score: 91 }
-                ];
-
-                list.innerHTML = "";
-                companies.forEach((company, i) => {
-                    const isHigh = company.score > 85;
-                    list.innerHTML += `
-                        <tr onclick="getInsight('${company.name}')" class="hover:bg-white/5 transition-all group cursor-pointer border-l-2 border-transparent hover:border-amex-blue">
-                            <td class="p-6">
-                                <div class="font-bold text-white group-hover:text-amex-blue transition">${company.name}</div>
-                                <div class="text-xs text-slate-500">${company.sector} Sector</div>
-                            </td>
-                            <td class="p-6">
-                                <span class="px-3 py-1 rounded-lg text-[10px] font-black ${isHigh ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amex-blue/10 text-amex-blue border border-amex-blue/20'}">
-                                    ${isHigh ? 'PLATINUM PREFERRED' : 'GOLD TIER'}
-                                </span>
-                            </td>
-                            <td class="p-6">
-                                <div class="w-full bg-slate-800 rounded-full h-1.5 w-24">
-                                    <div class="amex-gradient h-1.5 rounded-full" style="width: ${company.score}%"></div>
-                                </div>
-                                <span class="text-[10px] font-mono text-slate-400 mt-1 inline-block">${company.score}% Propensity</span>
-                            </td>
-                            <td class="p-6">
-                                <button class="p-2 hover:bg-amex-blue hover:text-white rounded-lg transition text-slate-500">
-                                    <i data-lucide="chevron-right" size="18"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                lucide.createIcons();
-
-            } catch (error) {
-                console.error("Connection Error:", error);
-                badge.innerHTML = '<span class="flex h-2 w-2 rounded-full bg-red-500"></span> Server Unreachable';
-                badge.classList.replace('text-emerald-400', 'text-red-400');
-            }
-        }
-
-        async function getInsight(name) {
-            const box = document.getElementById('insight-box');
-            box.innerHTML = `<div class="animate-pulse text-amex-blue text-sm font-bold tracking-widest uppercase">Analyzing Entity...</div>`;
+            const result = await response.json();
             
-            // Mocking AI Response for better UX
-            setTimeout(() => {
-                box.innerHTML = `
-                    <div class="space-y-4 animate-in fade-in duration-500">
-                        <h5 class="text-amex-accent font-bold text-xs uppercase tracking-widest">AI Analysis for ${name}</h5>
-                        <p class="text-slate-300 text-sm leading-relaxed italic">
-                            "Based on sentiment clustering, this business shows high expansion intent. Recommendation: Deploy Corporate Platinum offer with customized spend limits."
-                        </p>
-                        <div class="flex gap-2">
-                            <span class="text-[9px] bg-white/5 p-1 px-2 rounded border border-white/10">RISK: LOW</span>
-                            <span class="text-[9px] bg-white/5 p-1 px-2 rounded border border-white/10">LTV: $450k+</span>
-                        </div>
-                    </div>
-                `;
-            }, 800);
-        }
-
-        window.onload = () => {
+            // Success Message
+            box.innerHTML = `
+                <div class="text-center animate-in zoom-in duration-300">
+                    <div class="text-emerald-400 mb-2"><i data-lucide="check-circle" size="40" class="mx-auto"></i></div>
+                    <p class="text-white font-bold">Batch Complete!</p>
+                    <p class="text-slate-500 text-xs">${result.processed_count || 0} Entities Processed</p>
+                </div>
+            `;
+            
             lucide.createIcons();
-            fetchData();
-        };
-    </script>
-</body>
-</html>
+            fetchData(); // Table refresh karna naye data ke sath
+            
+        } catch (error) {
+            console.error("Upload Error:", error);
+            box.innerHTML = `<p class="text-red-400 text-xs italic">Error processing CSV. Ensure columns match requirements.</p>`;
+        }
+    }
+
+    // ... baaki fetchData aur getInsight functions wahi rahenge jo pehle the ...
+</script>
